@@ -2,8 +2,8 @@ class Vehicle {
   final String id;
   final String name;
   final String location;
-  final int fuelLevel;
-  final int batteryLevel;
+  double fuelLevel;
+  double batteryLevel;
   final DateTime lastUpdated;
 
   Vehicle({
