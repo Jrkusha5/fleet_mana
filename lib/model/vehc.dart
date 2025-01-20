@@ -2,8 +2,8 @@ class Vehicle {
   final String id;
   final String name;
   final String location;
-  double fuelLevel;
-  double batteryLevel;
+  int fuelLevel;
+  int batteryLevel;
   final DateTime lastUpdated;
 
   Vehicle({
@@ -34,4 +34,6 @@ class Vehicle {
       'batteryLevel': batteryLevel,
     };
   }
+
+  copyWith({required int fuelLevel, required int batteryLevel}) {}
 }
