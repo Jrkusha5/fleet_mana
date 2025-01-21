@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vehc_app/model/vehc.dart';
 import 'package:vehc_app/provider/vehc.dart';
+import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UpdateVehicleScreen extends StatefulWidget {
   final Vehicle vehicle;
-
   UpdateVehicleScreen({required this.vehicle});
 
   @override
@@ -20,117 +20,138 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the fuel and battery levels from the current vehicle
-    _fuelLevel = widget.vehicle.fuelLevel;
-    _batteryLevel = widget.vehicle.batteryLevel;
+    _fuelLevel = widget.vehicle.fuelLevel as int;
+    _batteryLevel = widget.vehicle.batteryLevel as int;
+  }
+
+  void _updateVehicle() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        final vehicleProvider = Provider.of<VehicleProvider>(context, listen: false);
+        await vehicleProvider.updateVehicle(
+          Vehicle(
+            id: widget.vehicle.id,
+            fuelLevel: _fuelLevel,
+            batteryLevel: _batteryLevel,
+            name: widget.vehicle.name,
+            location: widget.vehicle.location,
+          ),
+        );
+        Navigator.pop(context); // Go back to the previous screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Vehicle updated successfully!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update vehicle')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Vehicle Levels'),
+        title: Text(
+          'Update Vehicle',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Update Fuel and Battery Levels',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                       
-                      ),
+                // Vehicle Name
+                TextFormField(
+                  initialValue: widget.vehicle.name,
+                  decoration: InputDecoration(
+                    labelText: 'Vehicle Name',
+                    labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  enabled: false,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
+                
+                // Location
+                TextFormField(
+                  initialValue: widget.vehicle.location,
+                  decoration: InputDecoration(
+                    labelText: 'Location',
+                    labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  enabled: false,
+                ),
+                SizedBox(height: 16),
+                
+                // Fuel Level
                 TextFormField(
                   initialValue: _fuelLevel.toString(),
-                  decoration: InputDecoration(
-                    labelText: 'Fuel Level',
-                    labelStyle: TextStyle(color: const Color.fromARGB(255, 2, 5, 10)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade50,
-                  ),
                   keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Fuel Level (0-100)',
+                    labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onChanged: (value) {
+                    _fuelLevel = int.tryParse(value) ?? _fuelLevel;
+                  },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a fuel level';
-                    }
-                    try {
-                      int.parse(value);
-                    } catch (_) {
-                      return 'Please enter a valid number';
+                    if (value == null || value.isEmpty || int.tryParse(value) == null || int.parse(value) < 0 || int.parse(value) > 100) {
+                      return 'Please enter a valid fuel level between 0 and 100';
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    if (value != null) {
-                      _fuelLevel = int.parse(value);
-                    }
-                  },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
+                
+                // Battery Level
                 TextFormField(
                   initialValue: _batteryLevel.toString(),
-                  decoration: InputDecoration(
-                    labelText: 'Battery Level',
-                    labelStyle: TextStyle(color: const Color.fromARGB(255, 2, 4, 8)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade50,
-                  ),
                   keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Battery Level (0-100)',
+                    labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onChanged: (value) {
+                    _batteryLevel = int.tryParse(value) ?? _batteryLevel;
+                  },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a battery level';
-                    }
-                    try {
-                      int.parse(value);
-                    } catch (_) {
-                      return 'Please enter a valid number';
+                    if (value == null || value.isEmpty || int.tryParse(value) == null || int.parse(value) < 0 || int.parse(value) > 100) {
+                      return 'Please enter a valid battery level between 0 and 100';
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    if (value != null) {
-                      _batteryLevel = int.parse(value);
-                    }
-                  },
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 20),
+                
+                // Update Button
                 ElevatedButton(
+                  onPressed: _updateVehicle,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 3, 7, 5),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: Size(double.infinity, 50),
+                    backgroundColor: const Color.fromARGB(255, 5, 8, 14),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      _formKey.currentState?.save();
-                      // Update the vehicle with the new levels
-                      final updatedVehicle = widget.vehicle.copyWith(
-                        fuelLevel: _fuelLevel,
-                        batteryLevel: _batteryLevel,
-                      );
-                      context.read<VehicleProvider>().updateVehicle(updatedVehicle);
-                      Navigator.pop(context); // Go back to the previous screen
-                    }
-                  },
                   child: Text(
                     'Update Vehicle',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
                   ),
                 ),
               ],

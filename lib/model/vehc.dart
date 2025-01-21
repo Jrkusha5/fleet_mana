@@ -4,7 +4,6 @@ class Vehicle {
   final String location;
   int fuelLevel;
   int batteryLevel;
-  final DateTime lastUpdated;
 
   Vehicle({
     required this.id,
@@ -12,7 +11,6 @@ class Vehicle {
     required this.location,
     required this.fuelLevel,
     required this.batteryLevel,
-    required this.lastUpdated,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -22,7 +20,6 @@ class Vehicle {
       location: json['location'] ?? 'Unknown',
       fuelLevel: json['fuelLevel'] ?? 0,
       batteryLevel: json['batteryLevel'] ?? 0,
-      lastUpdated: DateTime.parse(json['lastUpdated']),
     );
   }
 

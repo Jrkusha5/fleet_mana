@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vehc_app/model/vehc.dart';
 import 'package:vehc_app/provider/vehc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AddVehicleScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -17,8 +18,11 @@ class AddVehicleScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Vehicle'),
-        backgroundColor: Colors.blueAccent,
+        title: Text(
+          'Add Vehicle',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color.fromARGB(255, 87, 144, 243),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -38,16 +42,17 @@ class AddVehicleScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Enter Vehicle Details',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                       ),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
                         labelText: 'Name',
+                        labelStyle: GoogleFonts.poppins(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -62,6 +67,7 @@ class AddVehicleScreen extends StatelessWidget {
                       controller: _locationController,
                       decoration: InputDecoration(
                         labelText: 'Location',
+                        labelStyle: GoogleFonts.poppins(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -76,6 +82,7 @@ class AddVehicleScreen extends StatelessWidget {
                       controller: _fuelLevelController,
                       decoration: InputDecoration(
                         labelText: 'Fuel Level (%)',
+                        labelStyle: GoogleFonts.poppins(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -94,6 +101,7 @@ class AddVehicleScreen extends StatelessWidget {
                       controller: _batteryLevelController,
                       decoration: InputDecoration(
                         labelText: 'Battery Level (%)',
+                        labelStyle: GoogleFonts.poppins(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -119,7 +127,6 @@ class AddVehicleScreen extends StatelessWidget {
                               fuelLevel: int.parse(_fuelLevelController.text),
                               batteryLevel:
                                   int.parse(_batteryLevelController.text),
-                              lastUpdated: DateTime.now(),
                             );
 
                             await vehicleProvider.addVehicle(newVehicle);
@@ -148,9 +155,13 @@ class AddVehicleScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 32, vertical: 12),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Add Vehicle',
-                          style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),

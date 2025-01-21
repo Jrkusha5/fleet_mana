@@ -65,9 +65,10 @@ class VehicleProvider extends ChangeNotifier {
         }),
         headers: {'Content-Type': 'application/json'},
       );
+
       if (response.statusCode == 200) {
         final updatedVehicle = Vehicle.fromJson(json.decode(response.body));
-        int index = _vehicles.indexWhere((v) => v.id == updatedVehicle.id);
+        final index = _vehicles.indexWhere((v) => v.id == updatedVehicle.id);
         if (index != -1) {
           _vehicles[index] = updatedVehicle;
           notifyListeners();
@@ -81,5 +82,4 @@ class VehicleProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
 }
